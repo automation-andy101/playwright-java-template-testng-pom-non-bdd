@@ -1,6 +1,5 @@
-package com.qa.api.gorest;
+package com.qa.api.gorest.post;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.APIRequest;
 import com.microsoft.playwright.APIRequestContext;
@@ -14,11 +13,9 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
-import static com.qa.api.gorest.ApiPostCreateAUserTest.getRandomEmail;
+import static com.qa.api.gorest.post.ApiPostCreateAUserTest.getRandomEmail;
 
 public class ApiPostCreateUserWithPojo {
     Playwright playwright;

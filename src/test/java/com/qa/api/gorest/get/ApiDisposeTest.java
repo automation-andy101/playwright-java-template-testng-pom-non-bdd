@@ -1,4 +1,4 @@
-package com.qa.api.gorest;
+package com.qa.api.gorest.get;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,17 +6,15 @@ import com.microsoft.playwright.APIRequest;
 import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Playwright;
-import com.microsoft.playwright.options.HttpHeader;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
-public class ApiResponseHeadersTest {
+public class ApiDisposeTest {
     Playwright playwright;
     APIRequest request;
     APIRequestContext apiRequestContext;
@@ -29,19 +27,26 @@ public class ApiResponseHeadersTest {
     }
 
     @Test
-    public void getHeadersTest() throws IOException {
+    public void disposeResponseTest() throws IOException {
         APIResponse apiResponse = apiRequestContext.get("https://gorest.co.in/public/v2/users");
 
-        // User Map
-        Map<String, String> headerMap = apiResponse.headers();
-        headerMap.forEach((k, v) -> System.out.println(k + ":" + v));
-        Assert.assertEquals(headerMap.get("server"), "cloudflare");
+        int statusCode = apiResponse.status();
+        System.out.println("Response status code is - " + statusCode);
 
-        // Using List
-        List<HttpHeader> headerList = apiResponse.headersArray();
-        for (HttpHeader e : headerList) {
-            System.out.println(e.name + " : " + e.value);
-        }
+        String statusText = apiResponse.statusText();
+        System.out.println("Response status text is - " + statusText);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(apiResponse.body());
+        String jsonPrettyResponse = jsonNode.toPrettyString();
+        System.out.println("Response body is - " + jsonPrettyResponse);
+
+        Map<String, String> headersMap = apiResponse.headers();
+        Assert.assertEquals(headersMap.get("content-type"), "application/json");
+        System.out.println(headersMap);
+
+        apiResponse.dispose();
+        apiRequestContext.dispose();
     }
 
 

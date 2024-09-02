@@ -1,4 +1,4 @@
-package com.qa.api.gorest;
+package com.qa.api.gorest.get;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.Map;
 
-public class ApiDisposeTest {
+public class GetApiCall {
     Playwright playwright;
     APIRequest request;
     APIRequestContext apiRequestContext;
@@ -28,7 +28,7 @@ public class ApiDisposeTest {
     }
 
     @Test
-    public void disposeResponseTest() throws IOException {
+    public void getUsersApiTest() throws IOException {
         APIResponse apiResponse = apiRequestContext.get("https://gorest.co.in/public/v2/users");
 
         int statusCode = apiResponse.status();
@@ -45,11 +45,26 @@ public class ApiDisposeTest {
         Map<String, String> headersMap = apiResponse.headers();
         Assert.assertEquals(headersMap.get("content-type"), "application/json");
         System.out.println(headersMap);
-
-        apiResponse.dispose();
-        apiRequestContext.dispose();
     }
 
+    @Test
+    public void getASpecificUser() throws IOException {
+        APIResponse apiResponse = apiRequestContext.get("https://gorest.co.in/public/v2/users",
+                    RequestOptions.create()
+                            .setQueryParam("gender", "male")
+                    );
+
+        int statusCode = apiResponse.status();
+        System.out.println("Response status code is - " + statusCode);
+
+        String statusText = apiResponse.statusText();
+        System.out.println("Response status text is - " + statusText);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(apiResponse.body());
+        String jsonPrettyResponse = jsonNode.toPrettyString();
+        System.out.println("Response body is - " + jsonPrettyResponse);
+    }
 
     @AfterTest
     public void tearDown() {
