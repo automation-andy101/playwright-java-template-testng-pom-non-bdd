@@ -33,7 +33,7 @@ public class ApiDeleteUserWithPojoLombok {
     @Test
     public void deleteUserTest() throws IOException {
 
-//        1. POST - Create a user
+        // 1. POST - Create a user
         UsersRequest usersRequest = UsersRequest.builder()
                 .name("Andrew")
                 .email(getRandomEmail())
